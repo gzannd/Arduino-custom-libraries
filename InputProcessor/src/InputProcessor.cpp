@@ -36,6 +36,7 @@ INPUT_RESULT InputProcessor::HandleInput(char inputCharacter)
   
    if(inputCharacter == '*')
    {
+      Reset();
       inputResult = NO_MATCH;
    }
    else if(inputCharacter == '#')
@@ -48,7 +49,7 @@ INPUT_RESULT InputProcessor::HandleInput(char inputCharacter)
       }
       else
       {
-        inputResult = NO_MATCH;
+        inputResult = INPUT_ERROR;
       }
    }
    else
