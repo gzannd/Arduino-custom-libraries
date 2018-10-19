@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014-2015 NicoHood
+Copyright (c) 2014-2018 NicoHood
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,16 +21,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// include guard
+// Include Guard
 #pragma once
 
-// software version
-#define PCINT_VERSION 124
+// Software Version
+#define PCINT_VERSION 126
 
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+#ifdef ARDUINO
 #include "Arduino.h"
 
 #ifndef ARDUINO_ARCH_AVR
 #error This library can only be used with AVR
+#endif
+
+#else
+
+#ifndef LOW
+#define LOW 0x0
+#endif
+#ifndef CHANGE
+#define CHANGE 0x1
+#endif
+#ifndef FALLING
+#define FALLING 0x2
+#endif
+#ifndef RISING
+#define RISING 0x3
+#endif
+
 #endif
 
 //================================================================================
@@ -44,7 +65,7 @@ THE SOFTWARE.
 #include "PinChangeInterruptPins.h"
 
 #if !PCINT_NUM_USED_PORTS
-#error Please enable at least one PCINT port!
+#error Please enable at least one PCINT port and pin!
 #endif
 
 // manually include cpp files to save flash if only 1 ISR is present
@@ -103,9 +124,13 @@ PinChangeInterruptEventPCINT ## pcint PCINT_MACRO_BRACKETS
 typedef void(*callback)(void);
 
 // useless function for weak implemented/not used functions, extern c needed for the alias
+#ifdef __cplusplus
 extern "C" {
-	void pcint_null_callback(void);
+#endif
+    void pcint_null_callback(void);
+#ifdef __cplusplus
 }
+#endif
 
 void PinChangeInterruptEventPCINT0(void);
 void PinChangeInterruptEventPCINT1(void);
